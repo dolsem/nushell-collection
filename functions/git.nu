@@ -18,3 +18,10 @@ export def 'git rbc' [...git_args] {
 export def 'git +x' [...git_args] {
   ^git update-index --chmod=+x ...$git_args
 }
+
+export def 'git unstash' [
+  --index = 0,
+  ...git_args
+] {
+  ^git checkout $'stash@{($index)}' '--' ...$git_args
+}
