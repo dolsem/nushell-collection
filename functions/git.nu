@@ -155,6 +155,13 @@ export def 'git retrospect' [
 
   # other commands: $ git retropect <file> [--edit|--done]
 
+  # make sure we're using GNU diff
+  if (diff --version | str starts-with 'Apple diff') {
+    print -e 'GNU diff not installed. Install with `brew install diffutils`'
+    rm $new_dir
+    return
+  }
+
   let file_lines = open $file | lines
   let check = {|fn| $file_lines | any $fn }
   if (do $check { str starts-with '<<<<<<< ' }) and (do $check { $in == '=======' }) and (do $check { str starts-with '>>>>>>> ' }) {
