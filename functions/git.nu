@@ -47,10 +47,10 @@ def print_conflict_diff [file_a: string, file_b: string] {
   let changed_fmt = "<<<<<<< Old%c'\\12'%<=======%c'\\12'%>>>>>>>> New%c'\\12'"
   git show $"HEAD:($file_a)" | with-file $in {|f| (
     diff $f $file_b
-      --unchanged-group-format=($unchanged_fmt)
-      --old-group-format=($old_fmt)
-      --new-group-format=($new_fmt)
-      --changed-group-format=($unchanged_fmt)
+      $"--unchanged-group-format=($unchanged_fmt)"
+      $"--old-group-format=($old_fmt)"
+      $"--new-group-format=($new_fmt)"
+      $"--changed-group-format=($unchanged_fmt)"
   )}
 }
 
