@@ -1,8 +1,13 @@
 # Nushell Collection
 [![License: MIT][license-image]][license-url]
 ## Installation
-```sh
+Clone repository, then run:
+```nushell
 $ nu install.nu
+```
+Or install without cloning:
+```nushell
+$ nu -c (curl -L https://github.com/dolsem/nushell-collection/blob/main/install.nu?raw=true)
 ```
 ## What's included
 #### Below is the list of items that can be installed:
