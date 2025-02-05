@@ -207,3 +207,37 @@ export def 'git retrospect' [
     ^$editor $file
   }
 }
+
+def find_commit [
+  --grep: string,
+  --after: string,
+] {
+  mut query = []
+  if ($grep | is-not-empty) {
+    $query = $query | append $"--grep=($grep)"
+  }
+  if ($after | is-not-empty) {
+    $query = $query | append $"--after=($after)"
+  }
+
+  if ($query | length) < 1 {
+    return
+  }
+
+  let commit_hashes = (git log --all --reverse --pretty=format:'%H' ...$query | lines)
+  let count = $commit_hashes | length
+  if $count < 1 {
+    print -e $"No commit found matching ($query)"
+    return
+  }
+  if $count > 1 and ($after | is-empty) {
+    print -e ($"(ansi red)Multiple commits matching ($query):(ansi reset)")
+    $commit_hashes | each {
+      print -e (git log --color=always -1 $in)
+    }
+    return
+  }
+  return ($commit_hashes | first)
+}
+
+export alias 'git find c' = find_commit
