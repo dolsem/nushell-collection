@@ -1,7 +1,7 @@
 # Blender version manager
 const ENV_VAR = 'BLENDER_PATH'
 
-export def --wrapped main [...raw_args] {
+export def --wrapped blender [...raw_args] {
   let args = parse_args $raw_args
   let blender_path = get_blender_path $args.version
 

@@ -1,4 +1,6 @@
 # Git wrapper with useful subcommands
+# module
+
 export def 'git s' [...git_args] {
   ^git status -s ...$git_args
 }

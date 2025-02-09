@@ -1,5 +1,6 @@
 # j - Directory bookmarks
-export def --env main [
+
+export def --env j [
   --add (-a) # add new bookmark
   --remove (-r) # remove bookmark
   name?: string # bookmark name
