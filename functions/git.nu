@@ -36,10 +36,16 @@ def with-file [str: string, fn: closure] {
     let val = (do $fn $file)
     do $cleanup
     return $val
-  } catch {
+  } catch { |err|
+    print -e $err.rendered
     do $cleanup
     $in.raw
   }
+}
+
+def safe-diff [...args] {
+  let result = (diff ...$args | complete)
+  if $result.exit_code == 1 { $result.stdout } else { error make { msg: $result.stderr } }
 }
 
 def print_conflict_diff [file_a: string, file_b: string] {
@@ -48,11 +54,11 @@ def print_conflict_diff [file_a: string, file_b: string] {
   let new_fmt = "<<<<<<< Old%c'\\12'=======%c'\\12'%>>>>>>>> New%c'\\12'"
   let changed_fmt = "<<<<<<< Old%c'\\12'%<=======%c'\\12'%>>>>>>>> New%c'\\12'"
   git show $"HEAD:($file_a)" | with-file $in {|f| (
-    diff $f $file_b
+    safe-diff $f $file_b
       $"--unchanged-group-format=($unchanged_fmt)"
       $"--old-group-format=($old_fmt)"
       $"--new-group-format=($new_fmt)"
-      $"--changed-group-format=($unchanged_fmt)"
+      $"--changed-group-format=($changed_fmt)"
   )}
 }
 
@@ -70,7 +76,7 @@ def retrospect_list [retrospect_dir: string] {
 def retrospect_cleanup [file: string] {
   let split_path = $file | path split
   for $i in ($split_path | length | $in - 1)..0 {
-    let path_to_rm = $split_path | range 0..$i | path join
+    let path_to_rm = $split_path | slice 0..$i | path join
     if ($path_to_rm | path type) == 'dir' and (ls -a $path_to_rm | length) > 0 {
       break
     }
