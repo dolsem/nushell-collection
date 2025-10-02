@@ -170,7 +170,7 @@ export def 'git retrospect' [
     return
   }
 
-  let file_lines = open $file | lines
+  let file_lines = open --raw $file | lines
   let check = {|fn| $file_lines | any $fn }
   if (do $check { str starts-with '<<<<<<< ' }) and (do $check { $in == '=======' }) and (do $check { str starts-with '>>>>>>> ' }) {
     print -e $"'($file)' has unresolved conflicts that have to be resolved first"
