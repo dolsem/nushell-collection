@@ -7,10 +7,11 @@ $ nu install.nu
 ```
 Or install without cloning:
 ```nushell
-$ nu -c (curl -L https://github.com/dolsem/nushell-collection/blob/main/install.nu?raw=true)
+$ nu -c (http get https://github.com/dolsem/nushell-collection/raw/main/install.nu)
 ```
 ## What's included
 #### Below is the list of items that can be installed:
+  - **code** - vscode helpers
   - **git** - git wrapper with useful subcommands
   - **j** - command line directory bookmarking
   - **kq** - simple K8S templating using yq
