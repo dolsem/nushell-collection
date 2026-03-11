@@ -22,13 +22,12 @@ export def 'code command run' [
   try {
     http post --content-type application/json http://localhost:3131/execute ($payload | to json -r)
   } catch {|err|
-    let msg = ($err | into string)
-    if ($msg =~ 'Cannot make request') {
+    if ($err.msg =~ 'Cannot make request' or $err.msg =~ 'Network failure') {
       print "❌ VSCode Command Server is not running."
       print "Install/enable the extension:"
       print "\e]8;;https://marketplace.visualstudio.com/items?itemName=crimson206.vscode-command-server\e\\Install VSCode Command Server\e]8;;\e\\"
     } else {
-      error make {msg: $msg}
+      error make $err
     }
   }
   
