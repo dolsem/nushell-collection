@@ -17,6 +17,10 @@ export def 'git rbc' [...git_args] {
   ^git rebase --continue ...$git_args
 }
 
+export def 'git cpnc' [...git_args] {
+  ^git cherry-pick --no-commit ...$git_args
+}
+
 export def 'git +x' [...git_args] {
   ^git update-index --chmod=+x ...$git_args
 }
