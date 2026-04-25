@@ -69,7 +69,7 @@ def print_conflict_diff [file_a: string, file_b: string] {
 def retrospect_list [retrospect_dir: string] {
   if ($retrospect_dir | path exists) {
     let file_glob = $"($retrospect_dir)/**/*" | into glob
-    let files = ls -a $file_glob | filter { $in.type == 'file' } | get name | path relative-to $retrospect_dir
+    let files = ls -a $file_glob | where { $in.type == 'file' } | get name | path relative-to $retrospect_dir
     if not ($files | is-empty) {
       return $files
     }
@@ -91,8 +91,8 @@ def retrospect_cleanup [file: string] {
 def get_retrospect_editor [config_key: string] {
   mut editor = (git config --get $config_key)
   if ($editor | is-empty) { $editor = (git config --get core.editor) }
-  if ($editor | is-empty) { $editor = ($env | get -i GIT_EDITOR) }
-  if ($editor | is-empty) { $editor = ($env | get -i EDITOR) }
+  if ($editor | is-empty) { $editor = ($env | get -o GIT_EDITOR) }
+  if ($editor | is-empty) { $editor = ($env | get -o EDITOR) }
   return $editor
 }
 

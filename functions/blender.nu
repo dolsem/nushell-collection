@@ -19,13 +19,13 @@ export def --wrapped 'blender py' [...raw_args] {
 }
 
 def parse_args [args: list<string>] {
-  let blender_args = $args | filter {|a| $a | str starts-with '-V:' | not $in}
-  let version_args = $args | filter {|a| $a | str starts-with '-V:'}
+  let blender_args = $args | where {|a| not ($a | str starts-with '-V:')}
+  let version_args = $args | where {|a| $a | str starts-with '-V:'}
   { blender: $blender_args, version: $version_args }
 }
 
 def get_blender_path [version_args: list<string>] {
-  let blender_path = $env | get -i $ENV_VAR
+  let blender_path = $env | get -o $ENV_VAR
   if ($blender_path | is-empty) {
     print -e $"BLENDER_PATH environment variable does not exist"
     return null
@@ -36,7 +36,7 @@ def get_blender_path [version_args: list<string>] {
   } else {
     'default'
   }
-  let blender_path_value = $blender_path | get -i $version_key
+  let blender_path_value = $blender_path | get -o $version_key
   if ($blender_path_value | is-empty) {
     print -e $"Key "($version_key)" not set in ($ENV_VAR)"
     return null
@@ -46,6 +46,6 @@ def get_blender_path [version_args: list<string>] {
 }
 
 def get_python_path [blender_path: string] {
-  let dir = (ls $blender_path | where type == 'dir' | get name | filter { ($in | path basename | str substring 0..0 | try { $in | into int | true } | default false) } | get 0)
+  let dir = (ls $blender_path | where type == 'dir' | get name | where { ($in | path basename | str substring 0..0 | try { $in | into int | true } | default false) } | get 0)
   [$blender_path, $dir, 'python', 'bin'] | path join
 }

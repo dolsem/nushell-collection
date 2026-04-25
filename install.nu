@@ -68,7 +68,7 @@ def remote_install [] {
   rm -rf $clone_dir
 }
 
-if ($env | get -i FILE_PWD | is-empty) {
+if ($env | get -o FILE_PWD | is-empty) {
   remote_install
 } else {
   local_install $env.FILE_PWD
