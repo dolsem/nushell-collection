@@ -252,4 +252,25 @@ def find_commit [
   return ($commit_hashes | first)
 }
 
+def find_worktree [
+  -b, # greb by branch name
+  query: string
+] {
+  if not $b {
+    error make {
+      msg: $"(ansi i)-b(ansi rst_i) flag is required"
+    }
+    return
+  }
+
+  let matches = git worktree list | from ssv -n | rename path ref | where ref =~ $query | get path
+  if ($matches | length) < 1 {
+    error make {
+      msg: 'No matches'
+    }
+  }
+  $matches
+}
+
 export alias 'git find c' = find_commit
+export alias 'git find w' = find_worktree
