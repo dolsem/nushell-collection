@@ -33,7 +33,7 @@ export def 'git unstash' [
 }
 
 def with-file [str: string, fn: closure] {
-  let file = $nu.temp-path | path join $"(random uuid).tmp"
+  let file = $nu.temp-dir | path join $"(random uuid).tmp"
   $str | save $file
   let cleanup = { rm $file }
   try {
