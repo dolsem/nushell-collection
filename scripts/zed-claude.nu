@@ -1,3 +1,12 @@
+def normalize_path [str: string] {
+  mut parts = $str | path split
+  if $nu.os-info.name == "windows" {
+    let letter = $parts | get 0 | str replace '\' ''
+    $parts = [$letter, ...($parts | slice 1..)]
+  }
+  $parts | str join '/'
+}
+
 def session_exists [session_id: string] {
     let config_dir = (
         $env.CLAUDE_CONFIG_DIR?
@@ -6,7 +15,7 @@ def session_exists [session_id: string] {
     let sessions_dir = ($config_dir | path join "sessions")
 
     if ($sessions_dir | path exists) {
-        let sessions_glob = ($sessions_dir | path join "*.json")
+        let sessions_glob = normalize_path ($sessions_dir | path join "*.json")
 
         # Pull file paths, read json contents, and look for a matching sessionId
         (glob $sessions_glob
