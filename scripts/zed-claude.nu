@@ -1,8 +1,12 @@
 def normalize_path [str: string] {
   mut parts = $str | path split
+  mut first_part = $parts | get 0
+  $parts = $parts | slice 1..
   if $nu.os-info.name == "windows" {
-    let letter = $parts | get 0 | str replace '\' ''
-    $parts = [$letter, ...($parts | slice 1..)]
+    let letter = first_part | str replace '\' ''
+    $parts = [$letter, ...$parts]
+  } else {
+    $parts = ['', ...$parts]
   }
   $parts | str join '/'
 }
@@ -12,16 +16,13 @@ def session_exists [session_id: string] {
         $env.CLAUDE_CONFIG_DIR?
         | default ("~/.claude" | path expand)
     )
-    let sessions_dir = ($config_dir | path join "sessions")
+    let sessions_dir = ($config_dir | path join "projects")
 
     if ($sessions_dir | path exists) {
-        let sessions_glob = normalize_path ($sessions_dir | path join "*.json")
+        let sessions_glob = normalize_path ($sessions_dir | path join $"**/($session_id)*")
 
         # Pull file paths, read json contents, and look for a matching sessionId
-        (glob $sessions_glob
-          | each { |file| open $file | get -o sessionId }
-          | any { |id| $id == $session_id }
-        )
+        (glob $sessions_glob | length) > 0
     } else {
         false
     }
