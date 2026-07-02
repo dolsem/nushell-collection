@@ -3,7 +3,7 @@ def normalize_path [str: string] {
   mut first_part = $parts | get 0
   $parts = $parts | slice 1..
   if $nu.os-info.name == "windows" {
-    let letter = first_part | str replace '\' ''
+    let letter = $first_part | str replace '\' ''
     $parts = [$letter, ...$parts]
   } else {
     $parts = ['', ...$parts]
