@@ -274,3 +274,6 @@ def find_worktree [
 
 export alias 'git find c' = find_commit
 export alias 'git find w' = find_worktree
+
+export def 'git readd' [] { git add (git diff --name-only --cached) }
+
