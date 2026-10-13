@@ -199,7 +199,7 @@ export def 'git retrospect' [
     mut answer = ''
     print -n $"Overwrite ($file) in retrospect cache \(all changes will be lost\)? \(y/n\): "
     while not ($answer in ['y', 'n']) {
-      $answer = (input -s -n 1 | str downcase)
+      $answer = (input -s -n 1 | str lowercase)
       # print -n $"\r(ansi erase_line)"
     }
     print $answer
